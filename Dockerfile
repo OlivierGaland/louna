@@ -66,7 +66,7 @@ RUN rm -rf /tmp/src
 
 #Apache configuration
 RUN apt-get update && apt-get -y upgrade && DEBIAN_FRONTEND=noninteractive apt-get -y install \
-        apache2 php7.2 libapache2-mod-php7.2 mediainfo && \
+        apache2 php7.2 libapache2-mod-php7.2 php7.2-xml mediainfo && \
     rm -rf /var/lib/apt/lists/*
 
 RUN a2enmod php7.2
@@ -81,6 +81,13 @@ ENV APACHE_PID_FILE /var/run/apache2.pid
 ADD src /var/www/site
 ADD cnf/apache-config.conf /etc/apache2/sites-enabled/000-default.conf
 
-#CMD /usr/sbin/apache2ctl -D FOREGROUND
+RUN chown -R www-data:www-data /var/www
+#RUN mkdir /mnt/video
+#RUN chown -R www-data:www-data /mnt/video
+RUN chmod u+s /usr/bin/python3
+RUN chmod u+s /usr/local/bin/ffmpeg
+
+CMD /usr/sbin/apache2ctl -D FOREGROUND
 #CMD service apache2 start && /bin/bash
-CMD service apache2 start && /var/www/site/python/transcode.py
+#CMD service apache2 start && /var/www/site/python/transcode.py h265_base mytag
+#CMD service apache2 start

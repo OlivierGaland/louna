@@ -1,12 +1,6 @@
 #!/usr/bin/env python3
-import os,time,filecmp
-
-H265_WORKDIR = '/mnt/video'
-
-EXT_TOPROCESS = 'avi'
-EXT_SWAP = 'swap'
-EXT_INWORK = 'tmp'
-EXT_PROCESSED = 'mkv'
+import os,time,filecmp,argparse
+import xml.etree.ElementTree as ET
 
 def split_filepath(fp):
     d , f = os.path.split(fp)
@@ -17,73 +11,92 @@ def split_filepath(fp):
         return d,t[0],t[1]
 
 def delete_tmp(filepathname):
-    print("Warning: tmp file found : "+filepathname)
-    print("Deleting "+filepathname)
+    print("Warning: tmp file found, deleting : "+filepathname)
     os.remove(filepathname)
 
-def process_file(directory,filename):
+def process_file(directory,filename,extension):
     try:
-        do_break = False
-        start = os.path.join(directory,filename)+'.'+EXT_TOPROCESS
-        swap = start+'.'+EXT_SWAP
+        start = os.path.join(directory,filename)+'.'+extension
         tmp = os.path.join(directory,filename)+'.'+EXT_INWORK+'.'+EXT_PROCESSED
-        destination = os.path.join(directory,filename)+'.h265.'+EXT_PROCESSED
+        destination = os.path.join(directory,filename)+'.'+FILE_TAG+'.'+EXT_PROCESSED
         print("Processing "+start+" -> "+destination)
         if os.path.isfile(destination):
-            print("Already processed : "+start)
-            return False
+            print("Already processed, skipping")
+            return
         if os.path.isfile(tmp):
             delete_tmp(tmp)
-            do_break = True
-        #Check if in use (md5sum constant)
+        #Check if in use (md5sum constant, this is horribly unoptimized, but could prevent start to encode a file being uploaded on nfs mount)
         pid = os.getpid()
-        size1 = os.system('md5sum "'+start+'" > /tmp/h265_1.'+str(pid))
+        size1 = os.system('md5sum "'+start+'" > /tmp/'+FILE_TAG+'_1.'+str(pid))
         time.sleep(10)
-        size2 = os.system('md5sum "'+start+'" > /tmp/h265_2.'+str(pid))
-        compare = filecmp.cmp('/tmp/h265_1.'+str(pid),'/tmp/h265_2.'+str(pid))
-        os.remove('/tmp/h265_1.'+str(pid))
-        os.remove('/tmp/h265_2.'+str(pid))
+        size2 = os.system('md5sum "'+start+'" > /tmp/'+FILE_TAG+'_2.'+str(pid))
+        compare = filecmp.cmp('/tmp/'+FILE_TAG+'_1.'+str(pid),'/tmp/'+FILE_TAG+'_2.'+str(pid))
+        os.remove('/tmp/'+FILE_TAG+'_1.'+str(pid))
+        os.remove('/tmp/'+FILE_TAG+'_2.'+str(pid))
         if not compare:
-            print("File currently modified, skipping : "+start)
-            return False
-        ret = os.system('ffmpeg -i "'+start+'" -c:v libx265 -crf 25 -c:a libfdk_aac -vbr 5 "'+tmp+'"')
+            print("File currently modified, temporarily skipping : "+start)
+            return
+        ret = os.system('ffmpeg -i "'+start+'" '+TRANSCODE_PARAMETERS+' "'+tmp+'"')
         print("Encoding done, result = "+str(ret))
         if ret == 0:
             os.rename(tmp,destination)
-        return do_break
     except Exception as e:
         print("Exception on swap creation, skipping file : "+str(e))
-        return False
 
+print("Starting A")
+        
+try:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("profile", help="Transcoding profile (without xml extension)")
+    parser.add_argument("tag", help="Tag to append on transcoded files")
+    args = parser.parse_args()
+    FILE_TAG = args.tag
+
+    profile = ET.parse('/var/www/site/python/profiles/'+args.profile+'.xml').getroot()
+    EXT_PROCESSED = profile.find('out_type').text
+    TRANSCODE_PARAMETERS = profile.find('parameters').text
+    
+    settings = ET.parse('/var/www/site/python/settings.xml').getroot()
+    WORKDIR = settings.find('input_dir').text
+    EXT_INWORK = settings.find('in_work_tag').text
+    EXT_TOPROCESS = settings.find('input_type_list').text.split(" ")
+except Exception as e:
+    print("Exception : "+str(e))
+
+print("Starting B")
+    
+    
 while True:
     file_list = []
 
+    print("Starting C")
+    
     try:
-        for root, subdirs, files in os.walk(H265_WORKDIR):
+        for root, subdirs, files in os.walk(WORKDIR):
             for file in files:
                 file_list.append(os.path.join(root,file))
 
         for f in file_list:
             directory , filename , extension =  split_filepath(f)
+
             if extension is not None and filename != '':
                 filepathname = os.path.join(directory,filename)+'.'+extension
-                if extension == EXT_PROCESSED:
-                    t = filename.rsplit('.',1)
-                    if len(t) > 1 and t[1] == EXT_INWORK:
+                t = filename.rsplit('.',1)
+
+                if len(t) > 1:
+                    if t[-1] == FILE_TAG:
+                        continue
+                    elif t[-1] == EXT_INWORK:
                         delete_tmp(filepathname)
-                elif extension == EXT_TOPROCESS:
-                    if process_file(directory,filename) == True:
-                        break
-                elif extension == EXT_SWAP:
-                    print("Warning: swap file found : "+filepathname)
-                    destination = os.path.join(directory,filename)
-                    print("Renaming "+filepathname+" -> "+destination)
-                    os.rename(filepathname,destination)
-                else:
-                    print("Skipping "+filepathname)
+                        continue
+                
+                if extension in EXT_TOPROCESS:
+                    process_file(directory,filename,extension)
+                
     except Exception as e:
         print("Exception : "+str(e))
+
     print("Sleep state 1 minute")
-    time.sleep(10)
+    time.sleep(60)
 
 
