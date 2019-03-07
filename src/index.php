@@ -33,23 +33,19 @@
 			</tr>
 		</table>
 	
-	
-	
-	
-<?php
-$output = shell_exec('ps -aux | grep transcode | grep python3 | grep -v grep');
-echo "<pre>$output</pre>";
-?>
-
-<?php
-$output = shell_exec('ls -al /mnt/video');
-echo "<pre>$output</pre>";
-?>
-
+		<div id='louna-logs'></div>
+		<br><br>
+		<div id='ffmpeg-logs'></div>
 
 	</body>
 	
 	<script>
+		function myTimer() {
+			$("div#louna-logs").load("php/req-louna-logs.php");
+			$("div#ffmpeg-logs").load("php/req-ffmpeg-logs.php");
+		}
+		var myTimerId = null;
+		myTimerId = setInterval(myTimer, 10000);
 		$("div#profile").load("php/req-profile.php");
 		$("div#state").html("<button id='start'>Start Louna</button>"); //TODO replace with a req getting daemon current status
 		$('#start').click(function(){
@@ -57,6 +53,7 @@ echo "<pre>$output</pre>";
 							var profile = $("select#profile-select option:selected").val();
 							var tag = $("#tag").val();
 							if (!tag) { tag = profile; }
+							//$.post('php/req-louna-start.php', { Profile : profile , Tag : tag } , function(ret) { $("div#state").html(ret); if (myTimerId !== null) { myTimerId = setInterval(myTimer, 10000); /* background timestamp check every 10 sec */ } } );							
 							$.post('php/req-louna-start.php', { Profile : profile , Tag : tag } , function(ret) { $("div#state").html(ret); } );							
 							return false; // stops browser from doing default submit process
 						});		

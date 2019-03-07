@@ -7,7 +7,7 @@ RUN apt-get update -qq && \
 	autoconf \
 	automake \
 	build-essential \
-        ca-certificates \
+    ca-certificates \
 	cmake \
 	git \
 	libass-dev \
@@ -82,12 +82,6 @@ ADD src /var/www/site
 ADD cnf/apache-config.conf /etc/apache2/sites-enabled/000-default.conf
 
 RUN chown -R www-data:www-data /var/www
-#RUN mkdir /mnt/video
-#RUN chown -R www-data:www-data /mnt/video
-RUN chmod u+s /usr/bin/python3
-RUN chmod u+s /usr/local/bin/ffmpeg
+RUN chmod u+s /usr/bin/python3 /usr/local/bin/ffmpeg
 
 CMD /usr/sbin/apache2ctl -D FOREGROUND
-#CMD service apache2 start && /bin/bash
-#CMD service apache2 start && /var/www/site/python/transcode.py h265_base mytag
-#CMD service apache2 start

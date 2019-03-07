@@ -36,21 +36,19 @@ def process_file(directory,filename,extension):
         if not compare:
             print("File currently modified, temporarily skipping : "+start)
             return
-        ret = os.system('ffmpeg -i "'+start+'" '+TRANSCODE_PARAMETERS+' "'+tmp+'"')
+        ret = os.system('ffmpeg -i "'+start+'" '+TRANSCODE_PARAMETERS+' "'+tmp+'" > /var/www/site/ffmpeg.txt 2>&1')
         print("Encoding done, result = "+str(ret))
         if ret == 0:
             os.rename(tmp,destination)
     except Exception as e:
-        print("Exception on swap creation, skipping file : "+str(e))
+        print("Exception : "+str(e))
 
-print("Starting A")
-        
 try:
     parser = argparse.ArgumentParser()
     parser.add_argument("profile", help="Transcoding profile (without xml extension)")
     parser.add_argument("tag", help="Tag to append on transcoded files")
     args = parser.parse_args()
-    FILE_TAG = args.tag
+    FILE_TAG = 'louna_'+args.tag
 
     profile = ET.parse('/var/www/site/python/profiles/'+args.profile+'.xml').getroot()
     EXT_PROCESSED = profile.find('out_type').text
@@ -63,14 +61,8 @@ try:
 except Exception as e:
     print("Exception : "+str(e))
 
-print("Starting B")
-    
-    
 while True:
     file_list = []
-
-    print("Starting C")
-    
     try:
         for root, subdirs, files in os.walk(WORKDIR):
             for file in files:
@@ -84,7 +76,7 @@ while True:
                 t = filename.rsplit('.',1)
 
                 if len(t) > 1:
-                    if t[-1] == FILE_TAG:
+                    if 'louna_' in t[-1]:
                         continue
                     elif t[-1] == EXT_INWORK:
                         delete_tmp(filepathname)
