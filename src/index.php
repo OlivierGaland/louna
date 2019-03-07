@@ -33,9 +33,8 @@
 			</tr>
 		</table>
 	
-		<div id='louna-logs'></div>
-		<br><br>
-		<div id='ffmpeg-logs'></div>
+		<table><tr><td><div id='louna-logs'></div></td></tr></table>
+		<table><tr><td><div id='ffmpeg-logs'></div></td></tr></table>
 
 	</body>
 	
@@ -43,20 +42,12 @@
 		function myTimer() {
 			$("div#louna-logs").load("php/req-louna-logs.php");
 			$("div#ffmpeg-logs").load("php/req-ffmpeg-logs.php");
+			$("div#state").load("php/req-state.php");
 		}
 		var myTimerId = null;
-		myTimerId = setInterval(myTimer, 10000);
 		$("div#profile").load("php/req-profile.php");
-		$("div#state").html("<button id='start'>Start Louna</button>"); //TODO replace with a req getting daemon current status
-		$('#start').click(function(){
-							$("div#state").html("Louna is starting ...");
-							var profile = $("select#profile-select option:selected").val();
-							var tag = $("#tag").val();
-							if (!tag) { tag = profile; }
-							//$.post('php/req-louna-start.php', { Profile : profile , Tag : tag } , function(ret) { $("div#state").html(ret); if (myTimerId !== null) { myTimerId = setInterval(myTimer, 10000); /* background timestamp check every 10 sec */ } } );							
-							$.post('php/req-louna-start.php', { Profile : profile , Tag : tag } , function(ret) { $("div#state").html(ret); } );							
-							return false; // stops browser from doing default submit process
-						});		
+		myTimer();
+		myTimerId = setInterval(myTimer, 10000);
 	</script>
 	
 </html>
