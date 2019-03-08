@@ -9,9 +9,9 @@ Prerequesite :
 
 Installation procedure :
 - Get the source code from github in your download dir
-- Build the docker image : cd (your download dir) ; docker build -t louna .
+- Build the docker image : cd (your download dir) ; docker build -t louna .  
   example : cd /home/ogaland/samba/docker/louna/ ; docker build -t louna .
-- Run the image : docker run -v (host path to monitor):/mnt/video/(mount name) -p (host port for webui):80 --rm -d louna
+- Run the image : docker run -v (host path to monitor):/mnt/video/(mount name) -p (host port for webui):80 --rm -d louna  
   example : docker run -v /home/ogaland/samba/video:/mnt/video/mount1 -p 8080:80 --rm -d louna
 - Open web browser on host ip with host port, check parameters (profile and optional tag to append on converted video file name) and start Louna  
   example : http://192.168.12.5:8080
