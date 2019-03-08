@@ -24,12 +24,12 @@ Technical stuff :
 - ffmpeg is rebuilt and compiled with x265 support when creating docker image (Louna was designed at first to do x265 conversion)
 - If you want to add others transcode profile, you can check src/python/profiles directory and add another xml with the audio and video codec/options you want (see ffmpeg doc)
 
-Credits : Some tutorials available on the web were read and used to make this project.
+Some tutorials available on the web were read and used to make this project.
 
 Apache+php installation in a Dockerfile :
 https://writing.pupius.co.uk/apache-and-php-on-docker-44faef716150
 
-Ffmpeg compilation with x265 support
+Ffmpeg compilation with x265 support : 
 https://jeffmikels.org/posts/ffmpeg-compilation-script-for-ubuntu/
 
 
