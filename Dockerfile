@@ -66,7 +66,7 @@ RUN rm -rf /tmp/src
 
 #Apache configuration
 RUN apt-get update && apt-get -y upgrade && DEBIAN_FRONTEND=noninteractive apt-get -y install \
-        apache2 php7.2 libapache2-mod-php7.2 php7.2-xml mediainfo && \
+        apache2 php7.2 libapache2-mod-php7.2 php7.2-xml && \
     rm -rf /var/lib/apt/lists/*
 
 RUN a2enmod php7.2
@@ -82,6 +82,6 @@ ADD src /var/www/site
 ADD cnf/apache-config.conf /etc/apache2/sites-enabled/000-default.conf
 
 RUN chown -R www-data:www-data /var/www
-RUN chmod u+s /usr/bin/python3 /usr/local/bin/ffmpeg
+RUN chmod u+s /usr/bin/python3 /usr/local/bin/ffmpeg /var/www/site/shell/kill_louna.sh
 
 CMD /usr/sbin/apache2ctl -D FOREGROUND

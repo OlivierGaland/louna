@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import os,time,filecmp,argparse
+import os,time,filecmp,argparse,datetime
 import xml.etree.ElementTree as ET
 
 def split_filepath(fp):
@@ -11,7 +11,7 @@ def split_filepath(fp):
         return d,t[0],t[1]
 
 def delete_tmp(filepathname):
-    print("Warning: tmp file found, deleting : "+filepathname)
+    print(datetime.datetime.now().strftime("%d-%m %H:%M:%S")+" Warning: tmp file found, deleting : "+filepathname)
     os.remove(filepathname)
 
 def process_file(directory,filename,extension):
@@ -19,9 +19,9 @@ def process_file(directory,filename,extension):
         start = os.path.join(directory,filename)+'.'+extension
         tmp = os.path.join(directory,filename)+'.'+EXT_INWORK+'.'+EXT_PROCESSED
         destination = os.path.join(directory,filename)+'.'+FILE_TAG+'.'+EXT_PROCESSED
-        print("Processing "+start+" -> "+destination)
+        print(datetime.datetime.now().strftime("%d-%m %H:%M:%S")+" Processing "+start+" -> "+destination)
         if os.path.isfile(destination):
-            print("Already processed, skipping")
+            print(datetime.datetime.now().strftime("%d-%m %H:%M:%S")+" Already processed, skipping")
             return
         if os.path.isfile(tmp):
             delete_tmp(tmp)
@@ -34,14 +34,14 @@ def process_file(directory,filename,extension):
         os.remove('/tmp/'+FILE_TAG+'_1.'+str(pid))
         os.remove('/tmp/'+FILE_TAG+'_2.'+str(pid))
         if not compare:
-            print("File currently modified, temporarily skipping : "+start)
+            print(datetime.datetime.now().strftime("%d-%m %H:%M:%S")+" File currently modified, temporarily skipping : "+start)
             return
         ret = os.system('ffmpeg -i "'+start+'" '+TRANSCODE_PARAMETERS+' "'+tmp+'" > /var/www/site/ffmpeg.txt 2>&1')
-        print("Encoding done, result = "+str(ret))
+        print(datetime.datetime.now().strftime("%d-%m %H:%M:%S")+" Encoding done, result = "+str(ret))
         if ret == 0:
             os.rename(tmp,destination)
     except Exception as e:
-        print("Exception : "+str(e))
+        print(datetime.datetime.now().strftime("%d-%m %H:%M:%S")+" Exception : "+str(e))
 
 try:
     parser = argparse.ArgumentParser()
@@ -59,7 +59,7 @@ try:
     EXT_INWORK = settings.find('in_work_tag').text
     EXT_TOPROCESS = settings.find('input_type_list').text.split(" ")
 except Exception as e:
-    print("Exception : "+str(e))
+    print(datetime.datetime.now().strftime("%d-%m %H:%M:%S")+" Exception : "+str(e))
 
 while True:
     file_list = []
@@ -86,9 +86,9 @@ while True:
                     process_file(directory,filename,extension)
                 
     except Exception as e:
-        print("Exception : "+str(e))
+        print(datetime.datetime.now().strftime("%d-%m %H:%M:%S")+" Exception : "+str(e))
 
-    print("Sleep state 1 minute")
+    print(datetime.datetime.now().strftime("%d-%m %H:%M:%S")+" Sleep state 1 minute")
     time.sleep(60)
 
 

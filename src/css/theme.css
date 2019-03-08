@@ -1,0 +1,193 @@
+/* COLOR MAPPING */
+
+/* OldLace    : Base Light Dark (Background) */
+/* Tan        : Base Medium Dark (Main Boxes) */
+/* Sienna     : Base High Dark (Information Boxes) */
+/* DarkSalmon : Secondary Base and Highlighted Base (Information Boxes) */
+/* White   : Text */
+/* Salmon  : Highlighted Text */
+
+body {
+    background-color: Tan;
+}
+
+table {
+	border-spacing: 0px;
+    border-collapse: collapse;
+    background-color: Tan;
+}
+
+table.base {
+    width: 1200px;
+    margin-left:auto; 
+    margin-right:auto;
+}
+
+td,tr,th {
+    background-color: Sienna;
+	border: 2px solid;
+}
+
+
+th, td {
+    padding: 3px 10px;
+    text-align: left;
+    color: white;
+	font-family: Verdana;
+}
+
+th {
+    height: 50px;
+    font-size: 18px;
+	font-weight: bold;
+}
+
+td {
+    height: 28px;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+td.top {
+    vertical-align: top;
+}
+
+td.pic {
+    width: 310px;	
+}
+
+td.nb,tr.nb,th.nb {
+	border: 0px;	
+}
+
+
+a.link {
+	color: white;
+	text-decoration: none;
+}
+
+
+button,input,select {
+	/*width: 200px;*/
+    background-color: Tan ;
+	/*border: 2px solid;
+    border-radius: 25px;*/
+    color: white;
+    padding: 3px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+	/*margin: 10px 10px 10px 10px;*/
+}
+
+
+
+/*
+
+table.menu {
+    width: 180px;
+}
+
+
+table.list {
+    background-color: Sienna;
+	border: 2px solid;
+    color: white;
+}
+
+th.list, td.list {
+	border: 2px solid;
+}
+
+
+.selectable:hover {background-color: Salmon; }
+.top {vertical-align: baseline;}
+
+td.top { vertical-align: top; }
+td.separator { margin: 20px 20px 20px 20px; }
+
+
+div#timeStamp {  display: none;  }
+
+div.tabcontent
+{
+   display: none;
+   width: 1450px;
+}
+
+img.showlink {
+   vertical-align: middle;
+   padding: 0px 10px;
+   float: right;
+   height: 16px;
+   width: 16px;
+}
+
+
+button.base,input.base,select.base {
+	width: 200px;
+    background-color: Sienna ;
+	border: 2px solid;
+    border-radius: 25px;
+    color: white;
+    padding: 10px 22px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+	margin: 10px 10px 10px 10px;
+}
+
+td.centered {
+	text-align: center;
+}
+
+input.list,select.list {
+	width: 200px;
+    background-color: Tan;
+    color: white;
+    padding: 0px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+	font-weight: bold;
+	
+}
+
+button.square,input.square { border-radius: 0px 0px 0px 0px; }
+button.square_left,input.square_left { border-radius: 0px 25px 25px 0px; }
+button.square_right,input.square_right { border-radius: 25px 0px 0px 25px; }
+button.square_top,input.square_top { border-radius: 0px 0px 25px 25px; }
+button.square_bottom,input.square_bottom { border-radius: 0px 0px 25px 25px; }
+button.round_topright,input.round_topright { border-radius: 0px 25px 0px 0px; }
+
+
+button.nomargin,input.nomargin { margin: 0px 0px 0px 0px; }
+button.wide_margin,input.wide_margin { margin: 0px 10px 0px 10px; }
+
+
+.ui-widget {
+	font-family: Verdana;
+	font-weight: bold;
+}
+
+.ui-widget-header {
+    font-size: 18px;
+    background: Sienna;
+    color: White;
+    font-weight: bold;
+	margin: 0px;
+	padding: 5px;
+    border: 2px solid White;
+}
+
+.ui-widget-content {
+    font-size: 12px;
+    background: DarkSalmon;
+	color: White;
+    border: 1px solid White;
+	padding: 5px;
+}
+*/
