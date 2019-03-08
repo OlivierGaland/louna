@@ -24,7 +24,7 @@
 				</td>
 				<td class="pic">
 					<img src="pic/louna.png" alt="Louna (2009-2018)"  title="Software named in memory of my loved cat Louna (2009-2018)">
-					<a class="link" href="http://blog.hyenasoft.com" target="_blank">Homepage</a>
+					<a class="link" href="http://blog.hyenasoft.com/louna-transcoder-daemon/" target="_blank">Homepage</a>
 					<a class="link" href="https://github.com/OlivierGaland/louna" target="_blank">Github</a>
 				</td>
 			</tr>
