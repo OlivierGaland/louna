@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:latest
 MAINTAINER Olivier Galand "galand.olivier.david@gmail.com"
 
 #Install and compile ffmpeg with x265 support
@@ -59,10 +59,9 @@ RUN PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="/usr/local/lib/pkgconfig" ./configur
         --enable-libx264 \
         --enable-libx265 \
         --enable-nonfree && \
-    make && make install && hash -r
+    make && make install && hash -r && rm -rf /tmp/src
 
 WORKDIR /
-RUN rm -rf /tmp/src
 
 #Apache configuration
 RUN apt-get update && apt-get -y upgrade && DEBIAN_FRONTEND=noninteractive apt-get -y install \
