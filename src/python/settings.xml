@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <settings>
    <input_dir>/mnt/video</input_dir>
-   <input_type_list>avi mpg</input_type_list>
+   <input_type_list>avi mpg mkv</input_type_list>
    <in_work_tag>tmp</in_work_tag>
 </settings>
