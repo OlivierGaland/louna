@@ -1,3 +1,5 @@
+!!! IMPORTANT : Under redesign : do not clone this repository, undetected bug could alter your movies 
+
 # Louna transcoder daemon
 Louna is a web based video transcoder daemon provided in a docker image including ffmpeg with x265 support.
 Once daemon is started it will monitor one or more volumes and transcode the videos inside in the selected format.
