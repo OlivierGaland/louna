@@ -36,10 +36,12 @@ def process_file(directory,filename,extension):
         if not compare:
             print(datetime.datetime.now().strftime("%d-%m %H:%M:%S")+" File currently modified, temporarily skipping : "+start)
             return
-        ret = os.system('ffmpeg -i "'+start+'" '+TRANSCODE_PARAMETERS+' "'+tmp+'" > /var/www/site/ffmpeg.txt 2>&1')
-        print(datetime.datetime.now().strftime("%d-%m %H:%M:%S")+" Encoding done, result = "+str(ret))
-        if ret == 0:
-            os.rename(tmp,destination)
+        #Check if file exist and not hevc codec
+        if os.system('/var/www/html/shell/check_hevc.sh "'+start+'"') == 0:
+            ret = os.system('ffmpeg -i "'+start+'" '+TRANSCODE_PARAMETERS+' "'+tmp+'" > /var/www/html/ffmpeg.txt 2>&1')
+            print(datetime.datetime.now().strftime("%d-%m %H:%M:%S")+" Encoding done, result = "+str(ret))
+            if ret == 0:
+                os.rename(tmp,destination)
     except Exception as e:
         print(datetime.datetime.now().strftime("%d-%m %H:%M:%S")+" Exception : "+str(e))
 
@@ -50,11 +52,11 @@ try:
     args = parser.parse_args()
     FILE_TAG = 'louna_'+args.tag
 
-    profile = ET.parse('/var/www/site/python/profiles/'+args.profile+'.xml').getroot()
+    profile = ET.parse('/var/www/html/python/profiles/'+args.profile+'.xml').getroot()
     EXT_PROCESSED = profile.find('out_type').text
     TRANSCODE_PARAMETERS = profile.find('parameters').text
     
-    settings = ET.parse('/var/www/site/python/settings.xml').getroot()
+    settings = ET.parse('/var/www/html/python/settings.xml').getroot()
     WORKDIR = settings.find('input_dir').text
     EXT_INWORK = settings.find('in_work_tag').text
     EXT_TOPROCESS = settings.find('input_type_list').text.split(" ")
@@ -79,10 +81,12 @@ while True:
                     if 'louna_' in t[-1]:
                         continue
                     elif t[-1] == EXT_INWORK:
+                        #print(datetime.datetime.now().strftime("%d-%m %H:%M:%S")+"Delete "+filepathname)
                         delete_tmp(filepathname)
                         continue
                 
                 if extension in EXT_TOPROCESS:
+                    #print(datetime.datetime.now().strftime("%d-%m %H:%M:%S")+"Process "+directory+" -> "+filename+"."+extension)
                     process_file(directory,filename,extension)
                 
     except Exception as e:

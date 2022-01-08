@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <profile>
    <description>h265/aac crf25/vbr5</description>
-   <parameters>-c:v libx265 -crf 25 -c:a libfdk_aac -vbr 5</parameters>
+   <parameters>-c:v libx265 -crf 25 -c:a aac -vbr 5</parameters>
    <out_type>mkv</out_type>
 </profile>
